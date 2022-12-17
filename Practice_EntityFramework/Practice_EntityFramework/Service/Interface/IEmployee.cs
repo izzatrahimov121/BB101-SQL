@@ -1,9 +1,11 @@
-﻿namespace Practice_EntityFramework.Service.Interface;
+﻿using Practice_EntityFramework.Core.Entities;
+
+namespace Practice_EntityFramework.Service.Interface;
 
 public interface IEmployee
 {
-    List<IEmployee> GetAllEmployees();
+    List<Employee> GetAllEmployees();
     void GetEmployeeById(int Id);
     void CreateEmployee(string name, string surname, int salary);
-    List<IEmployee> SearchEmployeeByName(string search);
+    List<Employee> SearchEmployeeByName(string search);
 }

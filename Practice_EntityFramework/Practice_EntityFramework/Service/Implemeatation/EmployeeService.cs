@@ -1,15 +1,19 @@
-﻿using Practice_EntityFramework.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Practice_EntityFramework.Core.Entities;
 using Practice_EntityFramework.DataAccess;
+using Practice_EntityFramework.Exceptions;
 using Practice_EntityFramework.Service.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Practice_EntityFramework.Service.Implemeatation;
 
 public class EmployeeService : IEmployee
 {
 
-    AppDbContext context = new();
+
     public async void CreateEmployee(string name, string surname, int salary)
     {
+        AppDbContext context = new();
         Employee emp = new()
         {
             Name = name,
@@ -23,18 +27,46 @@ public class EmployeeService : IEmployee
 
 
 
-    public List<IEmployee> GetAllEmployees()
+    public List<Employee> GetAllEmployees()
     {
-        throw new NotImplementedException();
+        AppDbContext context = new AppDbContext();
+        var query = from emp in context.Employees
+                    select emp;
+        return query.ToList();
     }
 
     public void GetEmployeeById(int Id)
     {
-        throw new NotImplementedException();
+        AppDbContext context = new();
+        var query = context.Employees.Where(emp => emp.Id == Id).FirstOrDefault();
+        //query.ToList();
+        if (query == null)
+        {
+            throw new NotFoundException("data not found");
+        }
+        else
+        {
+            Console.WriteLine($"Id: {query.Id}\n" +
+                    $"Name: {query.Name}\n" +
+                    $"Surname: {query.Surname}\n" +
+                    $"Salary: {query.Salary}");
+        }
     }
 
-    public List<IEmployee> SearchEmployeeByName(string search)
+    public List<Employee> SearchEmployeeByName(string search)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        AppDbContext context = new AppDbContext();
+        List<Employee> searchName = new List<Employee>();
+        //var query = context.Employees.Where(emp );
+        var query = from emp in context.Employees
+                    where emp.Name.Contains($"{search}")
+                    select emp;
+        //searchName.Add((Employee)query);
+        if (query == null)
+        {
+            throw new NotFoundException("data not found");
+        }
+        return query.ToList();
     }
 }

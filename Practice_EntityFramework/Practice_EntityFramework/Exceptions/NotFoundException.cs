@@ -1,0 +1,8 @@
+﻿namespace Practice_EntityFramework.Exceptions;
+
+public class NotFoundException : Exception
+{
+    public NotFoundException(string message) : base(message)
+    {
+    }
+}
